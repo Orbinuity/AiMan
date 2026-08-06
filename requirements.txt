@@ -1,0 +1,2 @@
+ollama>=0.6.1
+pyinstaller>=6.21.0
