@@ -2,7 +2,8 @@
 set -e
 
 REPO="Orbinuity/AiMan"
-BINARY_NAME="AiMan"
+APP_NAME="AiMan"
+BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
 
 BOLD='\033[1m'
@@ -17,7 +18,7 @@ success() { printf "${GREEN}[✓]${NC} %s\n" "$1"; }
 warn()    { printf "${YELLOW}[!]${NC} %s\n" "$1"; }
 error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
 
-printf "\n${BOLD}=== Installing %s ===${NC}\n\n" "$BINARY_NAME"
+printf "\n${BOLD}=== Installing %s ===${NC}\n\n" "$APP_NAME"
 
 info "Fetching latest release info..."
 LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
@@ -33,7 +34,7 @@ if [ -f "$TARGET_BINARY" ]; then
     LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/devnull | head -n 1 || true)
     
     if [ -n "$LOCAL_VERSION" ] && echo "$LOCAL_VERSION" | grep -q "$LATEST_TAG"; then
-        success "$BINARY_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!${NC}"
+        success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!${NC}"
         printf "\n"
         exit 0
     else
@@ -64,12 +65,12 @@ mkdir -p "$INSTALL_DIR"
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-info "Downloading ${BINARY_NAME} ${LATEST_TAG}..."
+info "Downloading ${APP_NAME} ${LATEST_TAG}..."
 curl -fsSL -o "$TMP_DIR/$BINARY_NAME" "$DOWNLOAD_URL"
 chmod +x "$TMP_DIR/$BINARY_NAME"
 
 mv "$TMP_DIR/$BINARY_NAME" "$TARGET_BINARY"
-success "Successfully installed ${BINARY_NAME} (${LATEST_TAG}) to ${INSTALL_DIR}"
+success "Successfully installed ${APP_NAME} (${LATEST_TAG}) to ${INSTALL_DIR}"
 
 case ":$PATH:" in
   *":$INSTALL_DIR:"*) ;;
