@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="1.1-linux"
+INSTALLER_VERSION="1.2-linux"
 
 BOLD='\033[1m'
 GREEN='\033[0;32m'
@@ -63,10 +63,10 @@ fi
 TARGET_BINARY="$INSTALL_DIR/$BINARY_NAME"
 
 if [ -f "$TARGET_BINARY" ]; then
-    LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/devnull | head -n 1 || true)
+    LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/dev/null | head -n 1 || true)
     
     if [ -n "$LOCAL_VERSION" ] && echo "$LOCAL_VERSION" | grep -q "$LATEST_TAG"; then
-        success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!${NC}"
+        success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!"
         printf "\n"
         exit 0
     else
