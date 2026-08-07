@@ -7,7 +7,6 @@ import traceback
 import platform
 import argparse
 import inspect
-import ollama
 import pprint
 import random
 import shutil
@@ -53,6 +52,13 @@ def log(message:str, not_for_elog:bool=False):
 def info(message:str):
     for i in message.splitlines():
         print(f"\033[96;1mInfo>\033[00m\033[96m {i}\033[00m")
+
+try:
+    import ollama
+except ImportError:
+    info("Python's ollama library not installed, installing ollama python library...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+    import ollama
 
 def error(message:str):
     for i in message.splitlines():
@@ -264,7 +270,10 @@ class OllamaCheck:
     def install_ollama(self):
         system = platform.system()
 
-        if system in ("Linux", "Darwin"):
+        if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
+            subprocess.run("pkg install ollama -y", shell=True, check=True)
+
+        elif system in ("Linux", "Darwin"):
             try:
                 cmd = "curl -fsSL https://ollama.com/install.sh | sh"
                 subprocess.run(cmd, shell=True, check=True)
