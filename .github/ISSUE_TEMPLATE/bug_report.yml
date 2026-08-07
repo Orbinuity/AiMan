@@ -31,6 +31,7 @@ body:
       label: aiman -et Command Output
       description: Execute the exact same command you ran, but add `-et` directly after `aiman` (e.g., `aiman -et [your options]`). Paste the output below.
       placeholder: Paste the console output from `aiman -et ...` here...
+      render: text
     validations:
       required: true
 
