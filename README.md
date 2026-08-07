@@ -22,6 +22,20 @@ curl -fsSL https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.sh | s
 irm https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.ps1 | iex
 ```
 
+## Uninstall
+
+### On Linux / Mac
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Orbinuity/AiMan/main/uninstall.sh | sh
+```
+
+### On Windows
+
+```powershell
+irm https://raw.githubusercontent.com/Orbinuity/AiMan/main/uninstall.ps1 | iex
+```
+
 ## License
 
 Before copying any part of this project, please read the [LICENSE](https://orbinuity.nl/license) file to understand the terms and conditions.
