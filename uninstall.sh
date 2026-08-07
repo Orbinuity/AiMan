@@ -3,11 +3,12 @@ set -e
 
 BINARY_NAME="aiman"
 APP_NAME="AiMan"
-
-# Detect possible installation targets
+UNINSTALLER_VERSION="1.0-linux"
 LOCAL_BIN="$HOME/.local/bin/$BINARY_NAME"
 TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin/$BINARY_NAME"
 APP_DIR="$HOME/.local/share/$APP_NAME"
+
+printf "\n${BOLD}=== %s Uninstaller v%s ===${NC}\n\n" "$APP_NAME" "$UNINSTALLER_VERSION"
 
 REMOVED=0
 
