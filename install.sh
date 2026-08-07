@@ -1,14 +1,12 @@
 #!/bin/sh
 set -e
 
-# --- Configuration ---
 REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 APP_VERSION="1.0-linux"
 INSTALL_DIR="$HOME/.local/bin"
 
-# --- Formatting Helpers ---
 BOLD='\033[1m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
@@ -23,7 +21,6 @@ error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
 
 printf "\n${BOLD}=== %s Installer v%s ===${NC}\n\n" "$APP_NAME" "$APP_VERSION"
 
-# --- 1. Termux / Android Installation ---
 if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     info "Android (Termux) environment detected!"
     
@@ -35,7 +32,7 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     mkdir -p "$APP_DIR"
 
     info "Downloading latest AiMan app source..."
-    curl -fsSL "https://raw.githubusercontent.${REPO}/main/app.py" -o "$APP_DIR/app.py"
+    curl -fsSL "https://raw.githubusercontent.com/${REPO}/main/app.py" -o "$APP_DIR/app.py"
 
     cat << 'EOF' > "$INSTALL_DIR/$BINARY_NAME"
 #!/bin/sh
@@ -57,7 +54,6 @@ EOF
     exit 0
 fi
 
-# --- 2. Desktop (Linux & macOS) Binary Installation ---
 info "Fetching latest release info from GitHub..."
 LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
 LATEST_TAG=$(echo "$LATEST_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
