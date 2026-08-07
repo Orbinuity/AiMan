@@ -56,17 +56,21 @@ def info(message:str):
 try:
     import ollama
 except ImportError:
-    info("Python's ollama library not installed, installing ollama python library...")
+    print("[*] Installing required 'ollama' Python library...")
+    
+    pip_cmd = [sys.executable, "-m", "pip", "install", "ollama", "--quiet"]
+    
+    if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
+        pip_cmd.extend(["--extra-index-url", "https://termux-user-repository.github.io/pypi/"])
+    
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+        subprocess.check_call(pip_cmd)
     except subprocess.CalledProcessError:
-        info("pip not found. Bootstrapping pip...")
         if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
-            subprocess.run("pkg install python-pip -y", shell=True, check=True)
+            subprocess.run("pkg install python-pip -y", shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
+            subprocess.check_call(pip_cmd)
         else:
-            subprocess.run([sys.executable, "-m", "ensurepip", "--default-pip"], check=True)
-
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+            raise
 
     import ollama
 
@@ -281,25 +285,25 @@ class OllamaCheck:
         system = platform.system()
 
         if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
-            subprocess.run("pkg install ollama -y", shell=True, check=True)
+            subprocess.run("pkg install ollama -y", shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
 
         elif system in ("Linux", "Darwin"):
             try:
                 cmd = "curl -fsSL https://ollama.com/install.sh | sh"
-                subprocess.run(cmd, shell=True, check=True)
+                subprocess.run(cmd, shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
             except subprocess.CalledProcessError as e:
                 error(f"Installation failed: {e}")
 
         elif system == "Windows":
             try:
                 ps_cmd = "irm https://ollama.com/install.ps1 | iex"
-                subprocess.run(["powershell", "-Command", ps_cmd], check=True)
+                subprocess.run(["powershell", "-Command", ps_cmd], check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
             except subprocess.CalledProcessError:
                 info("PowerShell install failed. Downloading installer executable...")
                 installer_url = "https://ollama.com/download/OllamaSetup.exe"
                 installer_path = os.path.join(os.environ.get("TEMP", "."), "OllamaSetup.exe")
                 urllib.request.urlretrieve(installer_url, installer_path)
-                subprocess.run([installer_path, "/SILENT"], check=True)
+                subprocess.run([installer_path], check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
         else:
             error(f"Unsupported platform: {system}")
 
