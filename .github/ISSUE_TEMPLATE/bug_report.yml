@@ -17,14 +17,13 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: upload
     id: ama-file
     attributes:
-      label: AMA File (.ama)
-      description: Drag and drop your `.ama` file here or paste its contents.
-      placeholder: Attach or paste your .ama file content here...
+      label: AMA File (Optional)
+      description: Drag and drop your `.ama` file if you used it.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: aiman-command-output
