@@ -221,7 +221,7 @@ def yn_input(message:str):
     user_inp = ""
     while not user_inp.lower() in ("yes", "no", "y", "n"):
         info(message)
-        user_inp = input("\033[94mY/n> ")
+        user_inp = input("\033[94;1mY/n>\033[00m\033[94m ")
         print("\033[00m", end="")
         if user_inp.lower() in ("yes", "y"):
             return True
@@ -554,7 +554,9 @@ It is {date.today()} today.
         new_memories = response['message']['content'].strip()
 
         if new_memories and not new_memories in ("NONE", "'NONE'", " 'NONE'", "'NONE'.", " 'NONE'."):
-            self.ama.edit("memories", new_memories)
+            memories = self.ama.read().get_memories()
+            memories += "\n"+new_memories
+            self.ama.write(self.ama.read().get_persona_list(), self.ama.read().get_scenario(), memories, self.ama.isCompressed(), False)
             info("Memories saved successfully")
             log(new_memories)
         else:
@@ -574,7 +576,7 @@ DALY UPDATES:   {dayinfo}
     user_inp = ""
     while not user_inp in ("exit", "q"):
         try:
-            user_type, user_inp = dubble_input("\033[94;1mYou> ", "\033[92;1mSystem> ")
+            user_type, user_inp = dubble_input("\033[94;1mYou>\033[00m\033[94m ", "\033[92;1mSystem>\033[00m\033[92m ")
             user_type = "user" if user_type == 1 else "system"
         except KeyboardInterrupt:
             print("\033[00m")
@@ -867,6 +869,7 @@ def main():
     LOGGING = args.telemetry or ELOGGING
 
     log("Version: "+__version__)
+    log("OS: "+platform.system())
 
     try:
         with urllib.request.urlopen("https://api.github.com/repos/Orbinuity/AiMan/releases/latest") as response:
@@ -958,5 +961,6 @@ if __name__ == "__main__":
             print_traceback()
             sys.exit(1)
         if LOGGING:
+            info("Something went wrong! Please report this issue at https://github.com/Orbinuity/AiMan/issues")
             error(f"[{type(e).__name__}] {e}")
         error("Something went wrong! Please report this issue at https://github.com/Orbinuity/AiMan/issues")
