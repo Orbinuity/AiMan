@@ -20,11 +20,10 @@ body:
   - type: upload
     id: ama-file
     attributes:
-      label: AMA File (Optional)
+      label: AMA File
       description: Drag and drop the `.ama` in a zip file if you used it.
-      placeholder: Commpressed `.ama` file
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: aiman-command-output
