@@ -21,7 +21,7 @@ body:
     id: ama-file
     attributes:
       label: AMA File
-      description: Drag and drop the `.ama` in a zip file here.
+      description: Drag and drop a `.zip` file containing your `.ama` file.
     validations:
       required: true
 
