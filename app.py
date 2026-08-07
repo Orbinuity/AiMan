@@ -28,13 +28,14 @@ START_BYTES = (b"\x41\x4d\x41\x31")
 def elog(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
         if ELOGGING:
             sig = inspect.signature(func)
             bound = sig.bind(*args, **kwargs)
             bound.apply_defaults()
             arg_str = ", ".join(f"{k}: {repr(v)}" for k, v in bound.arguments.items())
-            log(f"Calling {func.__qualname__} with args: {arg_str}")
-        return func(*args, **kwargs)
+            log(f"Calling {func.__qualname__} | Returned: {repr(result)} | Args: {arg_str}")
+        return result
     return wrapper
 
 def log(message:str, not_for_elog:bool=False):
@@ -44,7 +45,7 @@ def log(message:str, not_for_elog:bool=False):
 
 def info(message:str):
     for i in message.splitlines():
-        print(f"\033[96;1m[1mInfo>\033[00m\033[96m {i}\033[00m")
+        print(f"\033[96;1mInfo>\033[00m\033[96m {i}\033[00m")
 
 def error(message:str):
     for i in message.splitlines():
@@ -573,7 +574,7 @@ DALY UPDATES:   {dayinfo}
     user_inp = ""
     while not user_inp in ("exit", "q"):
         try:
-            user_type, user_inp = dubble_input("\033[94mYou> ", "\033[92mSystem> ")
+            user_type, user_inp = dubble_input("\033[94;1mYou> ", "\033[92;1mSystem> ")
             user_type = "user" if user_type == 1 else "system"
         except KeyboardInterrupt:
             print("\033[00m")
@@ -869,10 +870,12 @@ def main():
 
     try:
         with urllib.request.urlopen("https://api.github.com/repos/Orbinuity/AiMan/releases/latest") as response:
-            latest_version = response.read().decode("utf-8")
+            latest_release_json = json.loads(response.read().decode())
+            latest_version = latest_release_json["tag_name"]
 
-            if latest_version != __version__:            
+            if latest_version != __version__:
                 info(f"A new version is avalable, install it by running: {"irm https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.ps1 | iex" if platform.system() == "Windows" else "curl -fsSL https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.sh | sh"}")
+                log(f"This version: '{__version__}', new version: '{latest_version}'")
     except urllib.error.URLError:
         pass
 
