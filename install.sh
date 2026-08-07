@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="1.5-linux"
+INSTALLER_VERSION="1.6-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -26,8 +26,8 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
-    info "Installing Python and Curl..."
-    pkg update -y && pkg install python python-pip curl -y
+    info "Installing Python, Pydantic, and Curl..."
+    pkg update -y && pkg install python python-pip python-pydantic curl -y
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
