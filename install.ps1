@@ -3,6 +3,7 @@ $ErrorActionPreference = "Stop"
 $Repo = "Orbinuity/AiMan"
 $AppId = "aiman"
 $AppName = "AiMan"
+$AppVersion = "1.0-windows"
 $BinaryName = "$AppId.exe"
 $InstallDir = "$env:LOCALAPPDATA\Programs\$AppName"
 $TargetBinary = "$InstallDir\$BinaryName"
@@ -13,7 +14,7 @@ function Write-Info ($msg)    { Write-Host "[*] $msg" -ForegroundColor DarkCyan 
 function Write-Warn ($msg)    { Write-Host "[!] $msg" -ForegroundColor Yellow }
 function Write-Err ($msg)     { Write-Host "[✗] $msg" -ForegroundColor Red; exit 1 }
 
-Write-Header "Installing $AppName"
+Write-Header "$AppName installer v$AppVersion"
 
 Write-Info "Checking GitHub for the latest release..."
 try {
