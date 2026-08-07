@@ -21,33 +21,31 @@ error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
 
 printf "\n${BOLD}=== %s Installer v%s ===${NC}\n\n" "$APP_NAME" "$APP_VERSION"
 
+# --- 1. Termux / Android Installation ---
 if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     info "Android (Termux) environment detected!"
+    
+    # Use Termux's default system binary directory
+    TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
     info "Installing Python and Curl..."
     pkg update -y && pkg install python curl -y
 
-    mkdir -p "$INSTALL_DIR"
+    # Remove any old compiled binary leftover in Termux bin
+    rm -f "$TERMUX_BIN/$BINARY_NAME"
+
     APP_DIR="$HOME/.local/share/$APP_NAME"
     mkdir -p "$APP_DIR"
 
     info "Downloading latest AiMan app source..."
     curl -fsSL "https://raw.githubusercontent.com/${REPO}/main/app.py" -o "$APP_DIR/app.py"
 
-    cat << 'EOF' > "$INSTALL_DIR/$BINARY_NAME"
+    info "Creating launcher..."
+    cat << 'EOF' > "$TERMUX_BIN/$BINARY_NAME"
 #!/bin/sh
 exec python3 "$HOME/.local/share/AiMan/app.py" "$@"
 EOF
-    chmod +x "$INSTALL_DIR/$BINARY_NAME"
-
-    case ":$PATH:" in
-      *":$INSTALL_DIR:"*) ;;
-      *) 
-        warn "${INSTALL_DIR} is not in your PATH."
-        info "Add it to your shell config (~/.bashrc):"
-        printf "    ${BOLD}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}\n"
-        ;;
-    esac
+    chmod +x "$TERMUX_BIN/$BINARY_NAME"
 
     success "Successfully installed $APP_NAME for Termux!"
     printf "\n${GREEN}${BOLD}Done! Run '${BINARY_NAME}' to launch.${NC}\n\n"
