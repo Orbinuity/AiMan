@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="2.0-linux"
+INSTALLER_VERSION="2.1-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -21,6 +21,14 @@ error()   { printf "%s[✗]%s %s\n" "$RED" "$NC" "$1"; exit 1; }
 
 printf "\n%s=== %s installer v%s ===%s\n\n" "$BOLD" "$APP_NAME" "$INSTALLER_VERSION" "$NC"
 
+info "Fetching latest release info from GitHub..."
+LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
+LATEST_TAG=$(echo "$LATEST_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+
+if [ -z "$LATEST_TAG" ]; then
+    error "Could not retrieve latest version tag from GitHub API."
+fi
+
 if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     info "Android (Termux) environment detected!"
     
@@ -30,7 +38,6 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     pkg update -y && pkg install python python-pip ollama curl -y
 
     info "Installing Python dependencies..."
-    # Forces pip to use the pre-compiled Android wheel, skipping Rust compilation
     python3 -m pip install ollama --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
@@ -38,8 +45,9 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     APP_DIR="$HOME/.local/share/$APP_NAME"
     mkdir -p "$APP_DIR"
 
-    info "Downloading latest AiMan app source..."
-    curl -fsSL "https://raw.githubusercontent.com/${REPO}/main/app.py" -o "$APP_DIR/app.py"
+    info "Downloading AiMan ${LATEST_TAG} source code..."
+    APP_DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${LATEST_TAG}/app.py"
+    curl -fsSL "$APP_DOWNLOAD_URL" -o "$APP_DIR/app.py"
 
     info "Creating launcher..."
     cat << 'EOF' > "$TERMUX_BIN/$BINARY_NAME"
@@ -48,17 +56,9 @@ exec python3 "$HOME/.local/share/AiMan/app.py" "$@"
 EOF
     chmod +x "$TERMUX_BIN/$BINARY_NAME"
 
-    success "Successfully installed $APP_NAME for Termux!"
+    success "Successfully installed $APP_NAME (${LATEST_TAG}) for Termux!"
     printf "\n%s%sDone! Run '%s' to launch.%s\n\n" "$GREEN" "$BOLD" "$BINARY_NAME" "$NC"
     exit 0
-fi
-
-info "Fetching latest release info from GitHub..."
-LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
-LATEST_TAG=$(echo "$LATEST_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-
-if [ -z "$LATEST_TAG" ]; then
-    error "Could not retrieve latest version tag from GitHub API."
 fi
 
 TARGET_BINARY="$INSTALL_DIR/$BINARY_NAME"
