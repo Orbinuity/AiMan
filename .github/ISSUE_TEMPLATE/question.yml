@@ -16,3 +16,8 @@ body:
       placeholder: Describe your question
     validations:
       required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        You can add other tag if you want.
