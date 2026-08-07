@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug with the AiMan code.
+description: Report a bug with the code.
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -13,7 +13,7 @@ body:
     attributes:
       label: Bug Explanation
       description: Describe what happened, what you expected to happen, and steps to reproduce.
-      placeholder: Describe the bug in detail...
+      placeholder: Describe the bug in detail
     validations:
       required: true
 
@@ -30,7 +30,7 @@ body:
     attributes:
       label: aiman -et Command Output
       description: Execute the exact same command you ran, but add `-et` directly after `aiman` (e.g., `aiman -et [your options]`). Paste the output below.
-      placeholder: Paste the console output from `aiman -et ...` here...
+      placeholder: Paste the console output from `aiman -et ...` here
       render: text
     validations:
       required: true
@@ -40,7 +40,7 @@ body:
     attributes:
       label: JSON File (Optional)
       description: If a JSON file was used during this run, drag and drop it here or paste its contents.
-      placeholder: Attach or paste your .json file content here if applicable...
+      placeholder: Attach or paste your .json file content here if applicable
       render: json
     validations:
       required: false
