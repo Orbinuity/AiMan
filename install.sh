@@ -1,11 +1,13 @@
 #!/bin/sh
 set -e
 
+# --- Configuration ---
 REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
 
+# --- Formatting Helpers ---
 BOLD='\033[1m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
@@ -20,7 +22,47 @@ error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
 
 printf "\n${BOLD}=== Installing %s ===${NC}\n\n" "$APP_NAME"
 
-info "Fetching latest release info..."
+# --- 1. Termux / Android Detection ---
+if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
+    info "Android (Termux) environment detected!"
+    
+    info "Updating packages and installing Python & Ollama..."
+    pkg update -y && pkg install python ollama curl -y
+
+    info "Installing Python libraries..."
+    pip install ollama
+
+    mkdir -p "$INSTALL_DIR"
+    APP_DIR="$HOME/.local/share/$APP_NAME"
+    mkdir -p "$APP_DIR"
+
+    info "Downloading latest AiMan app source..."
+    curl -fsSL "https://raw.githubusercontent.com/${REPO}/main/app.py" -o "$APP_DIR/app.py"
+
+    # Create launcher script wrapper in ~/.local/bin
+    cat << 'EOF' > "$INSTALL_DIR/$BINARY_NAME"
+#!/bin/sh
+exec python3 "$HOME/.local/share/AiMan/app.py" "$@"
+EOF
+    chmod +x "$INSTALL_DIR/$BINARY_NAME"
+
+    success "Successfully installed $APP_NAME for Termux!"
+
+    case ":$PATH:" in
+      *":$INSTALL_DIR:"*) ;;
+      *) 
+        warn "${INSTALL_DIR} is not in your PATH."
+        info "Add it to your shell config (~/.bashrc):"
+        printf "    ${BOLD}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}\n"
+        ;;
+    esac
+
+    printf "\n${GREEN}${BOLD}Done! Run '${BINARY_NAME}' to launch.${NC}\n\n"
+    exit 0
+fi
+
+# --- 2. Linux & macOS Binary Installation (Standard) ---
+info "Fetching latest release info from GitHub..."
 LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
 LATEST_TAG=$(echo "$LATEST_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 
@@ -43,8 +85,6 @@ if [ -f "$TARGET_BINARY" ]; then
 fi
 
 OS="$(uname -s)"
-ARCH="$(uname -m)"
-
 case "${OS}" in
     Linux*)     OS_ASSET="linux";;
     Darwin*)    OS_ASSET="macos";;
