@@ -57,7 +57,17 @@ try:
     import ollama
 except ImportError:
     info("Python's ollama library not installed, installing ollama python library...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+    except subprocess.CalledProcessError:
+        info("pip not found. Bootstrapping pip...")
+        if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
+            subprocess.run("pkg install python-pip -y", shell=True, check=True)
+        else:
+            subprocess.run([sys.executable, "-m", "ensurepip", "--default-pip"], check=True)
+
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "ollama", "--quiet"])
+
     import ollama
 
 def error(message:str):
