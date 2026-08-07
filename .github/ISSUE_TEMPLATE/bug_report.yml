@@ -21,7 +21,7 @@ body:
     id: ama-file
     attributes:
       label: AMA File
-      description: Drag and drop the `.ama` in a zip file if you used it.
+      description: Drag and drop the `.ama` in a zip file here.
     validations:
       required: true
 
@@ -31,7 +31,6 @@ body:
       label: aiman -et Command Output
       description: Execute the exact same command you ran, but add `-et` directly after `aiman` (e.g., `aiman -et [your options]`). Paste the output below.
       placeholder: Paste the console output from `aiman -et ...` here...
-      render: shell
     validations:
       required: true
 
@@ -41,5 +40,6 @@ body:
       label: JSON File (Optional)
       description: If a JSON file was used during this run, drag and drop it here or paste its contents.
       placeholder: Attach or paste your .json file content here if applicable...
+      render: json
     validations:
       required: false
