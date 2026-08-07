@@ -2,8 +2,9 @@ name: Build and Release Binaries
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -17,14 +18,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            asset_name: AiMan-linux
-            pyinstaller_cmd: pyinstaller --onefile --name AiMan-linux app.py
-          #- os: macos-latest
-          #  asset_name: AiMan-macos
-          #  pyinstaller_cmd: pyinstaller --onefile --name AiMan-macos app.py
-          #- os: windows-latest
-          #  asset_name: AiMan-windows.exe
-          #  pyinstaller_cmd: pyinstaller --onefile --name AiMan-windows app.py
+            asset_name: aiman-linux
+            pyinstaller_cmd: pyinstaller --onefile --name aiman-linux app.py
+          - os: macos-latest
+            asset_name: aiman-macos
+            pyinstaller_cmd: pyinstaller --onefile --name aiman-macos app.py
+          - os: windows-latest
+            asset_name: aiman-windows.exe
+            pyinstaller_cmd: pyinstaller --onefile --name aiman-windows app.py
 
     steps:
       - name: Checkout Code
@@ -53,19 +54,24 @@ jobs:
           path: dist/${{ matrix.asset_name }}
 
   release:
-    name: Attach Binaries to Release
+    name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
           path: release-assets
           merge-multiple: true
 
-      - name: Upload Binaries to Release
+      - name: Create Release and Upload Binaries
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
+          body_path: README.md
           files: release-assets/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
