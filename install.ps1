@@ -1,8 +1,9 @@
 $ErrorActionPreference = "Stop"
 
 $Repo = "Orbinuity/AiMan"
+$AppId = "aiman"
 $AppName = "AiMan"
-$BinaryName = "$AppName.exe"
+$BinaryName = "$AppId.exe"
 $InstallDir = "$env:LOCALAPPDATA\Programs\$AppName"
 $TargetBinary = "$InstallDir\$BinaryName"
 
@@ -65,4 +66,4 @@ if ($UserPath -notlike "*$InstallDir*") {
 }
 
 Write-Success "Installation complete!"
-Write-Host "`nRun '$AppName' to launch.`n" -ForegroundColor Green
+Write-Host "`nRun '$AppId' to launch.`n" -ForegroundColor Green
