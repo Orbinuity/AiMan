@@ -20,10 +20,10 @@ body:
   - type: upload
     id: ama-file
     attributes:
-      label: AMA File
-      description: Drag and drop a `.zip` file containing your `.ama` file.
+      label: AMA File (Optional)
+      description: Drag and drop a `.zip` file containing your `.ama` file if it was used.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: aiman-command-output
