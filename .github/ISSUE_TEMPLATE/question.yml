@@ -1,0 +1,18 @@
+name: Question
+description: Ask a question about the app or code.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the sections below to help us awnser your question.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Description (Optional)
+      description: Describe what you want to know / understand
+      placeholder: Describe your question
+    validations:
+      required: false
