@@ -27,7 +27,7 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
     info "Installing Python and Curl..."
-    pkg update -y && pkg install python curl -y
+    pkg update -y && pkg install python python-pip curl -y
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
