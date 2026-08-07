@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="1.8-linux"
+INSTALLER_VERSION="2.0-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -26,11 +26,12 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
-    info "Installing system packages (Python, Pip, Ollama)..."
+    info "Installing system packages (Python, Pip, Ollama, Curl)..."
     pkg update -y && pkg install python python-pip ollama curl -y
 
     info "Installing Python dependencies..."
-    pip install ollama --quiet --extra-index-url https://eutalix.github.io/android-pydantic-core/
+    # Forces pip to use the pre-compiled Android wheel, skipping Rust compilation
+    python3 -m pip install ollama --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
