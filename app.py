@@ -353,8 +353,7 @@ class AMA:
         start_len = len(START_BYTES)
 
         if file_bytes[:start_len] != START_BYTES:
-            major_ver = __version__.split(".")[0]
-            error(f"This file is not a v{major_ver}.* AMA file!")
+            error(f"This file is not a {__version__.split(".")[0]}.* AMA file!")
 
         flag = file_bytes[start_len : start_len + 1]
 
