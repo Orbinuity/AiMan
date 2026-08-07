@@ -19,12 +19,12 @@ jobs:
           - os: ubuntu-latest
             asset_name: AiMan-linux
             pyinstaller_cmd: pyinstaller --onefile --name AiMan-linux app.py
-          - os: macos-latest
-            asset_name: AiMan-macos
-            pyinstaller_cmd: pyinstaller --onefile --name AiMan-macos app.py
-          - os: windows-latest
-            asset_name: AiMan-windows.exe
-            pyinstaller_cmd: pyinstaller --onefile --name AiMan-windows app.py
+          #- os: macos-latest
+          #  asset_name: AiMan-macos
+          #  pyinstaller_cmd: pyinstaller --onefile --name AiMan-macos app.py
+          #- os: windows-latest
+          #  asset_name: AiMan-windows.exe
+          #  pyinstaller_cmd: pyinstaller --onefile --name AiMan-windows app.py
 
     steps:
       - name: Checkout Code
