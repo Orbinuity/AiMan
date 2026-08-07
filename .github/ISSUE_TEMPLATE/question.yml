@@ -20,4 +20,4 @@ body:
   - type: markdown
     attributes:
       value: |
-        You can add other tags if you want.
+        You can add other labels if you want.
