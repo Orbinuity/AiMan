@@ -52,16 +52,15 @@ def log(message:str, not_for_elog:bool=False):
 def info(message:str):
     for i in message.splitlines():
         print(f"\033[96;1mInfo>\033[00m\033[96m {i}\033[00m")
-
 try:
     import ollama
 except ImportError:
-    print("[*] Installing required 'ollama' Python library...")
-    
-    pip_cmd = [sys.executable, "-m", "pip", "install", "ollama", "--quiet"]
+    info("Installing required 'ollama' Python library...")
     
     if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
-        pip_cmd.extend(["--extra-index-url", "https://termux-user-repository.github.io/pypi/"])
+        subprocess.run("pkg install python-pydantic -y", shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
+    
+    pip_cmd = [sys.executable, "-m", "pip", "install", "ollama", "--quiet"]
     
     try:
         subprocess.check_call(pip_cmd)
