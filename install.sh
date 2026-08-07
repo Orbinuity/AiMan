@@ -5,6 +5,7 @@ set -e
 REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
+APP_VERSION="1.0-linux"
 INSTALL_DIR="$HOME/.local/bin"
 
 # --- Formatting Helpers ---
@@ -20,7 +21,7 @@ success() { printf "${GREEN}[✓]${NC} %s\n" "$1"; }
 warn()    { printf "${YELLOW}[!]${NC} %s\n" "$1"; }
 error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
 
-printf "\n${BOLD}=== Installing %s ===${NC}\n\n" "$APP_NAME"
+printf "\n${BOLD}=== %s Installer v%s ===${NC}\n\n" "$APP_NAME" "$APP_VERSION"
 
 # --- 1. Termux / Android Installation ---
 if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
