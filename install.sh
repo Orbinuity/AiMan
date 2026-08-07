@@ -1,37 +1,37 @@
 #!/bin/sh
 set -e
 
+# --- Configuration ---
 REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="1.2-linux"
+INSTALLER_VERSION="1.3-linux"
 
-BOLD='\033[1m'
-GREEN='\033[0;32m'
-CYAN='\033[0;36m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m'
+# --- Formatting Helpers (Evaluates directly into ANSI escape bytes) ---
+BOLD=$(printf '\033[1m')
+GREEN=$(printf '\033[0;32m')
+CYAN=$(printf '\033[0;36m')
+YELLOW=$(printf '\033[1;33m')
+RED=$(printf '\033[0;31m')
+NC=$(printf '\033[0m')
 
-info()    { printf "${CYAN}[*]${NC} %s\n" "$1"; }
-success() { printf "${GREEN}[✓]${NC} %s\n" "$1"; }
-warn()    { printf "${YELLOW}[!]${NC} %s\n" "$1"; }
-error()   { printf "${RED}[✗]${NC} %s\n" "$1"; exit 1; }
+info()    { printf "%s[*]%s %s\n" "$CYAN" "$NC" "$1"; }
+success() { printf "%s[✓]%s %s\n" "$GREEN" "$NC" "$1"; }
+warn()    { printf "%s[!]%s %s\n" "$YELLOW" "$NC" "$1"; }
+error()   { printf "%s[✗]%s %s\n" "$RED" "$NC" "$1"; exit 1; }
 
-printf "\n${BOLD}=== %s Installer v%s ===${NC}\n\n" "$APP_NAME" "$INSTALLER_VERSION"
+printf "\n%s=== %s installer v%s ===%s\n\n" "$BOLD" "$APP_NAME" "$INSTALLER_VERSION" "$NC"
 
 # --- 1. Termux / Android Installation ---
 if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     info "Android (Termux) environment detected!"
     
-    # Use Termux's default system binary directory
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
     info "Installing Python and Curl..."
     pkg update -y && pkg install python curl -y
 
-    # Remove any old compiled binary leftover in Termux bin
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
     APP_DIR="$HOME/.local/share/$APP_NAME"
@@ -48,10 +48,11 @@ EOF
     chmod +x "$TERMUX_BIN/$BINARY_NAME"
 
     success "Successfully installed $APP_NAME for Termux!"
-    printf "\n${GREEN}${BOLD}Done! Run '${BINARY_NAME}' to launch.${NC}\n\n"
+    printf "\n%s%sDone! Run '%s' to launch.%s\n\n" "$GREEN" "$BOLD" "$BINARY_NAME" "$NC"
     exit 0
 fi
 
+# --- 2. Desktop (Linux & macOS) Binary Installation ---
 info "Fetching latest release info from GitHub..."
 LATEST_RELEASE_JSON=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest") || error "Failed to connect to GitHub."
 LATEST_TAG=$(echo "$LATEST_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
@@ -63,7 +64,7 @@ fi
 TARGET_BINARY="$INSTALL_DIR/$BINARY_NAME"
 
 if [ -f "$TARGET_BINARY" ]; then
-    LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/dev/null | head -n 1 || true)
+    LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/devnull | head -n 1 || true)
     
     if [ -n "$LOCAL_VERSION" ] && echo "$LOCAL_VERSION" | grep -q "$LATEST_TAG"; then
         success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!"
@@ -107,8 +108,8 @@ case ":$PATH:" in
   *) 
     warn "${INSTALL_DIR} is not in your PATH."
     info "Add it to your shell config (~/.bashrc or ~/.zshrc):"
-    printf "    ${BOLD}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}\n"
+    printf "    %sexport PATH=\"\$HOME/.local/bin:\$PATH\"%s\n" "$BOLD" "$NC"
     ;;
 esac
 
-printf "\n${GREEN}${BOLD}Done! Run '${BINARY_NAME}' to launch.${NC}\n\n"
+printf "\n%s%sDone! Run '%s' to launch.%s\n\n" "$GREEN" "$BOLD" "$BINARY_NAME" "$NC"
