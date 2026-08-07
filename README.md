@@ -8,6 +8,20 @@
 
 Run and handel AMA models
 
+## Install
+
+### On Linux / Mac
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.sh | sh
+```
+
+### On Windows
+
+```powershell
+irm https://raw.githubusercontent.com/Orbinuity/AiMan/main/install.ps1 | iex
+```
+
 ## License
 
 Before copying any part of this project, please read the [LICENSE](https://orbinuity.nl/license) file to understand the terms and conditions.
