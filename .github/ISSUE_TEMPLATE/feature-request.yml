@@ -1,0 +1,28 @@
+name: Feature request
+description: Request a feature or improvent to the code.
+title: "[Idea]: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the sections below to help implement this idea.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Explanation
+      description: Describe what the idea is and how it works in detail.
+      placeholder: Describe the idea in detail
+    validations:
+      required: true
+
+  - type: textarea
+    id: example-code
+    attributes:
+      label: Example code (Optional)
+      description: If you have some example code you ca show it here
+      placeholder: Attach or paste your example code here
+      render: python
+    validations:
+      required: false
