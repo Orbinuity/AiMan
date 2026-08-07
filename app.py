@@ -19,11 +19,12 @@ import ast
 import os
 import re
 
-__version__ = "v1.1"
+__version__ = "v1.1.1"
+AMA_VERSION = "v1.1"
 ELOGGING = False
 LOGGING = False
 LIST_LENGTH = 30
-START_BYTES = (b"\x41\x4d\x41\x31")
+START_BYTES = (b"\x41\x4d\x41"+AMA_VERSION.split(".")[0][-1].encode())
 
 # Helpers
 def elogw(func):
@@ -360,7 +361,7 @@ class AMA:
         start_len = len(START_BYTES)
 
         if file_bytes[:start_len] != START_BYTES:
-            error(f"This file is not a {__version__.split(".")[0]}.* AMA file!")
+            error(f"This file is not a {AMA_VERSION.split(".")[0]}.* AMA file!")
 
         flag = file_bytes[start_len : start_len + 1]
 
@@ -866,6 +867,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="AiMan: Run and handel AMA models")
     parser.add_argument("-v", "--version", action="version", version="AiMan "+__version__, help="Get currect version")
+    parser.add_argument("-av", "--amaversion", action="version", version="AMA "+AMA_VERSION, help="Get currect version")
     parser.add_argument("-t", "--telemetry", action="store_true", help="Enable extra info (Tipicly used for debugging or nice for logs)")
     parser.add_argument("-et", "--extremetelemetry", action="store_true", help="Every function call is loged. only for debugging, not for logs!")
     subparsers = parser.add_subparsers(dest="action", required=True, help="What action to do")
@@ -926,6 +928,7 @@ def main():
     LOGGING = args.telemetry or ELOGGING
 
     log("Version: "+__version__)
+    log("AMA Version: "+AMA_VERSION)
     log("OS: "+platform.system())
 
     try:
