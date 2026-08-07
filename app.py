@@ -7,6 +7,7 @@ import traceback
 import platform
 import argparse
 import inspect
+import ollama
 import pprint
 import random
 import shutil
@@ -52,26 +53,6 @@ def log(message:str, not_for_elog:bool=False):
 def info(message:str):
     for i in message.splitlines():
         print(f"\033[96;1mInfo>\033[00m\033[96m {i}\033[00m")
-try:
-    import ollama
-except ImportError:
-    info("Installing required 'ollama' Python library...")
-    
-    if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
-        subprocess.run("pkg install python-pydantic -y", shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
-    
-    pip_cmd = [sys.executable, "-m", "pip", "install", "ollama", "--quiet"]
-    
-    try:
-        subprocess.check_call(pip_cmd)
-    except subprocess.CalledProcessError:
-        if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
-            subprocess.run("pkg install python-pip -y", shell=True, check=True, stdout=None if ELOGGING else subprocess.DEVNULL, stderr=None if ELOGGING else subprocess.STDOUT)
-            subprocess.check_call(pip_cmd)
-        else:
-            raise
-
-    import ollama
 
 def error(message:str):
     for i in message.splitlines():
