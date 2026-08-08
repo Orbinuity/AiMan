@@ -19,7 +19,7 @@ import ast
 import os
 import re
 
-__version__ = "v1.1.1"
+__version__ = "v1.2.0"
 AMA_VERSION = "v1.1"
 ELOGGING = False
 LOGGING = False
@@ -262,6 +262,9 @@ class OllamaCheck:
         return any(model_id in m for m in local_models)
 
     def install_ollama(self):
+        if self.is_ollama_installed():
+            return
+
         system = platform.system()
 
         if "TERMUX_VERSION" in os.environ or os.path.exists("/data/data/com.termux"):
@@ -294,17 +297,22 @@ class OllamaCheck:
         system = platform.system()
 
         if system in ["Linux", "Darwin"]:
-            subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            process = subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         elif system == "Windows":
-            subprocess.Popen(["ollama", "app"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            process = subprocess.Popen(["ollama", "app"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        else:
+            error(f"Unsupported platform: {system}")
 
-        for _ in range(10):
+        for _ in range(30):
+            if process.poll() is not None:
+                error(f"Ollama service crashed immediately upon starting. Try running 'ollama {process.args[1]}' manually to see errors.")
+                
             if self.is_ollama_running():
                 info("Ollama engine connected.")
                 return
             time.sleep(1)
 
-        info("Ollama launched, but service connection timed out.")
+        error("Ollama launched, but service connection timed out after 30 seconds. Try again in a few minutes.")
 
     def install_model(self, model_id:str):
         ollama.pull(model_id)
