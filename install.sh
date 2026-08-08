@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="2.4-linux"
+INSTALLER_VERSION="2.5-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -35,10 +35,10 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
     info "Installing repo for python secific versions"
-    pkg install tur-repo
+    pkg install tur-repo -y
 
-    info "Installing system packages (Python, Pip, Curl)..."
-    pkg update -y && pkg install python3.13 python3.13-pip curl -y
+    info "Installing system packages (Python & Curl)..."
+    pkg update -y && pkg install python3 curl -y
 
     info "Installing Python dependencies..."
     python3 -m pip install ollama==0.6.1 --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
