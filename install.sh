@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="2.5-linux"
+INSTALLER_VERSION="2.6-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -41,7 +41,7 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     pkg update -y && pkg install python3 curl -y
 
     info "Installing Python dependencies..."
-    python3 -m pip install ollama==0.6.1 --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
+    python3 -m pip install ollama --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
