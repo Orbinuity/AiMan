@@ -38,7 +38,7 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     pkg install tur-repo
 
     info "Installing system packages (Python, Pip, Curl)..."
-    pkg update -y && pkg install python3.14 python3.14-pip curl -y
+    pkg update -y && pkg install python3.13 python3.13-pip curl -y
 
     info "Installing Python dependencies..."
     python3 -m pip install ollama==0.6.1 --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
