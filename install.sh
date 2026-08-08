@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="2.2-linux"
+INSTALLER_VERSION="2.3-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
