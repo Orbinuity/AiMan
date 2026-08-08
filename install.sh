@@ -34,6 +34,9 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
+    info "Installing repo for python secific versions"
+    pkg install tur-repo
+
     info "Installing system packages (Python, Pip, Curl)..."
     pkg update -y && pkg install python3.14 python3.14-pip curl -y
 
