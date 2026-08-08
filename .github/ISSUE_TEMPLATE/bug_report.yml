@@ -11,11 +11,11 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Bug Explanation
+      label: Extra Explanation (Optional)
       description: Describe what happened, what you expected to happen, and steps to reproduce.
       placeholder: Describe the bug in detail
     validations:
-      required: true
+      required: false
 
   - type: upload
     id: ama-file
