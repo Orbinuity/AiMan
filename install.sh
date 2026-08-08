@@ -5,7 +5,7 @@ REPO="Orbinuity/AiMan"
 APP_NAME="AiMan"
 BINARY_NAME="aiman"
 INSTALL_DIR="$HOME/.local/bin"
-INSTALLER_VERSION="2.1-linux"
+INSTALLER_VERSION="2.2-linux"
 
 BOLD=$(printf '\033[1m')
 GREEN=$(printf '\033[0;32m')
@@ -34,11 +34,11 @@ if [ -n "$TERMUX_VERSION" ] || [ -d "/data/data/com.termux" ]; then
     
     TERMUX_BIN="${PREFIX:-/data/data/com.termux/files/usr}/bin"
     
-    info "Installing system packages (Python, Pip, Ollama, Curl)..."
-    pkg update -y && pkg install python python-pip ollama curl -y
+    info "Installing system packages (Python, Pip, Curl)..."
+    pkg update -y && pkg install python3.14 python3.14-pip curl -y
 
     info "Installing Python dependencies..."
-    python3 -m pip install ollama --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
+    python3 -m pip install ollama==0.6.1 --extra-index-url https://eutalix.github.io/android-pydantic-core/ --only-binary pydantic-core
 
     rm -f "$TERMUX_BIN/$BINARY_NAME"
 
@@ -67,7 +67,7 @@ if [ -f "$TARGET_BINARY" ]; then
     LOCAL_VERSION=$("$TARGET_BINARY" --version 2>/dev/null | head -n 1 || true)
     
     if [ -n "$LOCAL_VERSION" ] && echo "$LOCAL_VERSION" | grep -q "$LATEST_TAG"; then
-        success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC}${GREEN})!"
+        success "$APP_NAME is already installed and up to date (${BOLD}${LATEST_TAG}${NC})!"
         printf "\n"
         exit 0
     else
